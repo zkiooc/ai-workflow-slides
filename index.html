@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 作为执行者 — 工作流自动化 · 4月进展汇报</title>
+<style>
+/* html-ppt :: shared webfonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+/* html-ppt :: base.css — reset + shared tokens + layout primitives */
+/* Default tokens. Themes in assets/themes/*.css override the :root block. */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f8;
+  --surface: #ffffff;
+  --surface-2: #f2f2f4;
+  --border: rgba(0,0,0,.08);
+  --border-strong: rgba(0,0,0,.16);
+  --text-1: #111216;
+  --text-2: #55596a;
+  --text-3: #8a8f9e;
+  --accent: #3b6cff;
+  --accent-2: #7a5cff;
+  --accent-3: #ff5c8a;
+  --good: #1aaf6c;
+  --warn: #f5a524;
+  --bad:  #e0445a;
+  --grad: linear-gradient(135deg,#3b6cff,#7a5cff 55%,#ff5c8a);
+  --grad-soft: linear-gradient(135deg,#eef2ff,#f5ecff 55%,#ffeef5);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 26px;
+  --shadow: 0 10px 30px rgba(18,24,40,.08), 0 2px 6px rgba(18,24,40,.04);
+  --shadow-lg: 0 24px 60px rgba(18,24,40,.14), 0 6px 16px rgba(18,24,40,.06);
+  --font-sans: 'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+  --font-serif: 'Playfair Display','Noto Serif SC',Georgia,serif;
+  --font-mono: 'JetBrains Mono','IBM Plex Mono',SFMono-Regular,Menlo,monospace;
+  --font-display: var(--font-sans);
+  --letter-tight: -.03em;
+  --letter-normal: -.01em;
+  --ease: cubic-bezier(.4,0,.2,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text-1);
+  font-family:var(--font-sans);font-weight:400;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:var(--letter-normal)}
+img,svg,video{max-width:100%;display:block}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd,pre,samp{font-family:var(--font-mono)}
+
+/* ================= SLIDE SYSTEM ================= */
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg)}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:72px 96px;
+  box-sizing:border-box;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s var(--ease), transform .5s var(--ease);
+  transform:translateX(30px);
+  overflow:hidden;
+}
+.slide.is-active{opacity:1;pointer-events:auto;transform:translateX(0);z-index:2}
+.slide.is-prev{transform:translateX(-30px)}
+
+/* single-page standalone (used when a layout file is opened directly) */
+body.single .slide{position:relative;width:100vw;height:100vh;opacity:1;transform:none;pointer-events:auto}
+
+/* ================= TYPOGRAPHY ================= */
+.eyebrow{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+.kicker{font-size:14px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+h1.title,.h1{font-family:var(--font-display);font-size:72px;line-height:1.05;font-weight:800;letter-spacing:var(--letter-tight);margin:0 0 18px;color:var(--text-1)}
+h2.title,.h2{font-family:var(--font-display);font-size:54px;line-height:1.1;font-weight:700;letter-spacing:var(--letter-tight);margin:0 0 14px}
+h3,.h3{font-size:32px;line-height:1.2;font-weight:600;letter-spacing:var(--letter-normal);margin:0 0 10px}
+h4,.h4{font-size:22px;line-height:1.3;font-weight:600;margin:0 0 8px}
+.lede{font-size:22px;line-height:1.55;color:var(--text-2);font-weight:300;max-width:62ch}
+.dim{color:var(--text-2)}
+.dim2{color:var(--text-3)}
+.mono{font-family:var(--font-mono)}
+.serif{font-family:var(--font-serif)}
+.gradient-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+
+/* ================= LAYOUT PRIMITIVES ================= */
+.stack>*+*{margin-top:14px}
+.row{display:flex;gap:24px;align-items:center}
+.row.wrap{flex-wrap:wrap}
+.grid{display:grid;gap:24px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.center{display:flex;align-items:center;justify-content:center;text-align:center}
+.fill{flex:1}
+.sp-t{padding-top:24px}.sp-b{padding-bottom:24px}
+.mt-s{margin-top:8px}.mt-m{margin-top:18px}.mt-l{margin-top:32px}
+.mb-s{margin-bottom:8px}.mb-m{margin-bottom:18px}.mb-l{margin-bottom:32px}
+
+/* ================= CARDS ================= */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:26px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card-soft{background:var(--surface-2);border:1px solid var(--border)}
+.card-outline{background:transparent;border:1.5px solid var(--border-strong);box-shadow:none}
+.card-accent{background:var(--surface);border-top:3px solid var(--accent)}
+.card-hover{transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.card-hover:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+
+.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:500;
+  background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+.pill-accent{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+
+/* ================= BARS / DIVIDERS ================= */
+.divider{height:1px;background:var(--border);width:100%}
+.divider-accent{height:3px;width:72px;background:var(--accent);border-radius:2px}
+
+/* ================= CHROME (header/footer/progress) ================= */
+.deck-header{position:absolute;top:24px;left:40px;right:40px;display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;z-index:10;pointer-events:none}
+.deck-footer{position:absolute;bottom:24px;left:40px;right:40px;display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--text-3);z-index:10;pointer-events:none}
+.slide-number::before{content:attr(data-current)}
+.slide-number::after{content:" / " attr(data-total)}
+.progress-bar{position:fixed;left:0;right:0;bottom:0;height:3px;background:transparent;z-index:20}
+.progress-bar > span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s var(--ease)}
+
+/* ================= PRESENTER / OVERVIEW ================= */
+.notes{display:none!important}
+.notes-overlay{position:fixed;inset:auto 0 0 0;max-height:42vh;background:rgba(20,22,30,.95);color:#e8ebf4;
+  padding:20px 32px;font-size:16px;line-height:1.6;border-top:1px solid rgba(255,255,255,.1);transform:translateY(100%);
+  transition:transform .3s var(--ease);z-index:40;overflow:auto;font-family:var(--font-sans)}
+.notes-overlay.open{transform:translateY(0)}
+.overview{position:fixed;inset:0;background:rgba(10,12,18,.92);backdrop-filter:blur(12px);z-index:50;
+  display:none;padding:40px;overflow:auto}
+.overview.open{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-content:start}
+.overview .thumb{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  aspect-ratio:16/9;overflow:hidden;cursor:pointer;position:relative;color:var(--text-1);padding:16px;
+  font-size:11px;transition:transform .2s var(--ease)}
+.overview .thumb:hover{transform:scale(1.04)}
+.overview .thumb .n{position:absolute;top:8px;left:10px;font-weight:700;font-size:14px;color:var(--text-3)}
+.overview .thumb .t{position:absolute;bottom:10px;left:14px;right:14px;font-weight:600;color:var(--text-1)}
+
+/* ================= PRESENTER VIEW ================= */
+/* Presenter view opens in a separate popup window (S key).
+ * All presenter styles are self-contained in the popup HTML generated by runtime.js.
+ * The audience window (this file) is NOT affected — it stays as normal deck view.
+ * Only the .notes class below is needed to hide speaker notes from audience. */
+
+/* ================= UTILITY ================= */
+.hidden{display:none!important}
+.nowrap{white-space:nowrap}
+.tr{text-align:right}.tc{text-align:center}.tl{text-align:left}
+.uppercase{text-transform:uppercase;letter-spacing:.12em}
+
+/* ================= PRINT ================= */
+@media print{
+  .slide{position:relative;opacity:1!important;transform:none!important;page-break-after:always;height:100vh}
+  .deck-header,.deck-footer,.progress-bar,.notes-overlay,.overview{display:none!important}
+}
+
+/* obsidian-claude-gradient — 紫色暗底 + GitHub-ish 渐变卡 */
+.tpl-obsidian-claude-gradient{
+  --oc-bg:#ffffff;
+  --oc-surface:#f7f8fc;
+  --oc-surface2:#eef1f8;
+  --oc-border:rgba(30,50,80,.12);
+  --oc-accent:#7c3aed;
+  --oc-accent2:#a855f7;
+  --oc-accent3:#6d28d9;
+  --oc-green:#059669;
+  --oc-blue:#2563eb;
+  --oc-orange:#ea580c;
+  --oc-yellow:#fbbf24;
+  --oc-red:#dc2626;
+  --oc-text:#1a1a2e;
+  --oc-dim:#64748b;
+  --oc-dimmer:#94a3b8;
+  background:var(--oc-bg);
+  color:var(--oc-text);
+  font-family:'Inter','Noto Sans SC','PingFang SC',-apple-system,sans-serif;
+}
+.tpl-obsidian-claude-gradient .slide{background:var(--oc-bg);color:var(--oc-text);padding:64px 88px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+.tpl-obsidian-claude-gradient .oc-cbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 28% 38%,rgba(124,58,237,.06) 0%,transparent 60%),radial-gradient(ellipse at 72% 62%,rgba(37,99,235,.05) 0%,transparent 60%)}
+.tpl-obsidian-claude-gradient .oc-cgrid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(30,50,80,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,50,80,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 35%,transparent 80%)}
+.tpl-obsidian-claude-gradient .slide > *{position:relative;z-index:2}
+.tpl-obsidian-claude-gradient .oc-snum{position:absolute;top:24px;right:36px;color:var(--oc-dimmer);font-size:12px;letter-spacing:.1em;z-index:3}
+.tpl-obsidian-claude-gradient .oc-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--oc-accent3);background:rgba(124,58,237,.14);border:1px solid rgba(124,58,237,.18);padding:5px 16px;border-radius:999px;margin-bottom:22px}
+.tpl-obsidian-claude-gradient .oc-h1{font-size:72px;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:0 0 10px;color:var(--oc-text)}
+.tpl-obsidian-claude-gradient .oc-h2{font-size:44px;font-weight:700;line-height:1.18;letter-spacing:-.015em;margin:0 0 14px}
+.tpl-obsidian-claude-gradient .oc-sub{font-size:19px;color:var(--oc-dim);line-height:1.65;max-width:720px;margin-top:14px}
+.tpl-obsidian-claude-gradient .oc-g{background:linear-gradient(135deg,#7c3aed 0%,#2563eb 55%,#059669 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tpl-obsidian-claude-gradient .oc-card{background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:14px;padding:22px 26px;text-align:left;position:relative;overflow:hidden}
+.tpl-obsidian-claude-gradient .oc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.25),transparent)}
+.tpl-obsidian-claude-gradient .oc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;max-width:1000px;margin-top:24px}
+.tpl-obsidian-claude-gradient .oc-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%;max-width:1080px;margin-top:24px}
+.tpl-obsidian-claude-gradient .oc-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;width:100%;max-width:1120px;margin-top:24px}
+.tpl-obsidian-claude-gradient .oc-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 11px;border-radius:999px;margin-bottom:10px}
+.tpl-obsidian-claude-gradient .oc-bp{background:rgba(124,58,237,.08);color:var(--oc-accent3)}
+.tpl-obsidian-claude-gradient .oc-bb{background:rgba(37,99,235,.08);color:var(--oc-blue)}
+.tpl-obsidian-claude-gradient .oc-bg{background:rgba(5,150,105,.08);color:var(--oc-green)}
+.tpl-obsidian-claude-gradient .oc-bo{background:rgba(234,88,12,.08);color:var(--oc-orange)}
+.tpl-obsidian-claude-gradient .oc-by{background:rgba(251,191,36,.15);color:var(--oc-yellow)}
+.tpl-obsidian-claude-gradient .oc-code{background:#010409;border:1px solid var(--oc-border);border-radius:12px;padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.85;width:100%;max-width:860px;text-align:left;color:#e6edf3}
+.tpl-obsidian-claude-gradient .oc-hl{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.18);border-left:4px solid var(--oc-accent2);border-radius:0 12px 12px 0;padding:16px 22px;font-size:16px;line-height:1.7;max-width:860px;text-align:left}
+.tpl-obsidian-claude-gradient .oc-steps{display:flex;flex-direction:column;gap:0;width:100%;max-width:820px;text-align:left}
+.tpl-obsidian-claude-gradient .oc-step{display:flex;gap:20px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(30,50,80,.08)}
+.tpl-obsidian-claude-gradient .oc-step:last-child{border-bottom:none}
+.tpl-obsidian-claude-gradient .oc-sn{width:36px;height:36px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;background:linear-gradient(135deg,var(--oc-accent),var(--oc-blue));color:#fff}
+.tpl-obsidian-claude-gradient .oc-sc h4{font-size:17px;font-weight:600;margin-bottom:6px;color:var(--oc-text)}
+.tpl-obsidian-claude-gradient .oc-sc p{font-size:14px;color:var(--oc-dim);line-height:1.6}
+.tpl-obsidian-claude-gradient .oc-pill{display:inline-flex;align-items:center;gap:8px;background:var(--oc-surface2);border:1px solid var(--oc-border);border-radius:999px;padding:7px 18px;font-size:14px;font-weight:500;color:var(--oc-text);margin:4px 6px 4px 0}
+.tpl-obsidian-claude-gradient .oc-quote{max-width:800px}
+.tpl-obsidian-claude-gradient .oc-quote blockquote{font-size:26px;font-weight:500;line-height:1.6;position:relative;padding:0 36px;margin:0;color:var(--oc-text)}
+.tpl-obsidian-claude-gradient .oc-quote blockquote::before{content:'\201C';position:absolute;left:-6px;top:-22px;font-size:78px;color:var(--oc-accent);opacity:.2;font-family:Georgia,serif;line-height:1}
+.tpl-obsidian-claude-gradient .oc-quote .attr{margin-top:20px;font-size:13px;color:var(--oc-dim)}
+.tpl-obsidian-claude-gradient .oc-big{font-size:140px;font-weight:900;line-height:.95;letter-spacing:-.04em}
+
+/* --- custom additions for this deck --- */
+.tpl-obsidian-claude-gradient .oc-list{text-align:left;max-width:860px;width:100%}
+.tpl-obsidian-claude-gradient .oc-list li{font-size:16px;line-height:1.75;color:var(--oc-dim);padding:4px 0}
+.tpl-obsidian-claude-gradient .oc-list li b{color:var(--oc-text)}
+.tpl-obsidian-claude-gradient .oc-list li .oc-g{font-weight:600}
+.tpl-obsidian-claude-gradient .oc-person{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.tpl-obsidian-claude-gradient .oc-person .oc-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--oc-accent),var(--oc-blue));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.tpl-obsidian-claude-gradient .oc-person .oc-name{font-size:14px;font-weight:600;color:var(--oc-text)}
+.tpl-obsidian-claude-gradient .oc-mini{font-size:13px;color:var(--oc-dim);line-height:1.6;margin-top:6px}
+.tpl-obsidian-claude-gradient .oc-grid-2x3{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:1000px;margin-top:20px}
+.tpl-obsidian-claude-gradient .oc-card-sm{background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:12px;padding:16px 20px;text-align:left;position:relative;overflow:hidden}
+.tpl-obsidian-claude-gradient .oc-card-sm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.18),transparent)}
+
+</style>
+</head>
+<body class="tpl-obsidian-claude-gradient">
+<div class="deck">
+
+  <section class="slide is-active ">
+    <div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    <div class="oc-snum">01 / 04</div>
+
+    <div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    
+    <div class="oc-tag">● 方向一 · 2026 Q2 AI 落地提升计划</div>
+    <h1 class="oc-h1" style="font-size:58px">AI 作为执行者<br><span class="oc-g">工作流自动化</span></h1>
+    <p class="oc-sub">人设计规则和流程，AI 按规则执行 —— 将重复性、规则性日常工作全链路自动化，<br>让人可以离开，AI 在后台持续跑。</p>
+    <div style="margin-top:32px">
+      <span class="oc-pill">📅 4月进展汇报</span>
+      <span class="oc-pill">👥 6人小组</span>
+      <span class="oc-pill">🎯 四大能力方向</span>
+    </div>
+  
+  </section>
+
+  <section class="slide " style="padding:48px 72px">
+    <div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    <div class="oc-snum">02 / 04</div>
+    <div class="oc-tag">● 以终为始 · WHY</div>
+    <h2 class="oc-h2" style="font-size:42px;margin-bottom:8px">工作流自动化要解决<span class="oc-g">什么问题</span>？</h2>
+    <p class="oc-sub" style="font-size:17px;margin-top:2px;margin-bottom:18px;max-width:900px">本质矛盾：人的时间和精力有限，但大量工作是<b>高频、重复、规则明确</b>的 —— 这类工作人做了浪费，不做又不行</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:1100px">
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge oc-bp" style="font-size:13px;padding:4px 13px;margin-bottom:10px">🔁 重复性信息搬运</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">每天从多个系统<b style="color:var(--oc-text)">手动复制数据</b>填表汇报，完全没有创造性，一旦来源格式变了又得重来。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：每日战报、周报数据汇总</span></p>
+      </div>
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge oc-bb" style="font-size:13px;padding:4px 13px;margin-bottom:10px">📬 多人协作信息同步</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">审批流靠人肉传递，<b style="color:var(--oc-text)">每个节点依赖人主动</b>，状态不透明，容易遗漏延迟。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：合同审批、活动上线审核</span></p>
+      </div>
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge oc-bg" style="font-size:13px;padding:4px 13px;margin-bottom:10px">⏰ 时间敏感触发动作</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">定时任务<b style="color:var(--oc-text)">依赖人记得</b>，人不在就断掉，无法保证一致性。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：定时报告、合同到期预警</span></p>
+      </div>
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge oc-bo" style="font-size:13px;padding:4px 13px;margin-bottom:10px">🔍 条件判断后分发</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">规则明确但<b style="color:var(--oc-text)">人工分配容易失误</b>，量大时根本处理不过来。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：工单路由、客诉分级告警</span></p>
+      </div>
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge" style="font-size:13px;padding:4px 13px;margin-bottom:10px;background:rgba(99,102,241,.08);color:#6366f1">📊 跨系统数据一致性</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">数据孤岛靠<b style="color:var(--oc-text)">人工双录</b>极易出错，错误发现滞后，代价随系统数量指数增长。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：多系统主数据同步</span></p>
+      </div>
+      <div class="oc-card" style="padding:18px 22px">
+        <span class="oc-badge" style="font-size:13px;padding:4px 13px;margin-bottom:10px;background:rgba(236,72,153,.08);color:#ec4899">📝 重复性内容生成</span>
+        <p style="color:var(--oc-dim);font-size:15px;line-height:1.7;margin:0">内容结构固定只是数据不同，<b style="color:var(--oc-text)">手动批量出错率随数量增加</b>。<br><span style="font-size:13px;color:var(--oc-dimmer)">典型：月度报告、周报草稿生成</span></p>
+      </div>
+    </div>
+    <div class="oc-hl" style="margin-top:18px;font-size:17px">💡 <b>一句话：</b>「规则清晰、人做没价值、但不做又必须做」—— 把人从机械执行中解放出来，让 AI 按规则跑。</div>
+  </section>
+
+  <section class="slide " style="justify-content:flex-start;padding:40px 64px;overflow-y:auto;font-size:93%">
+    <div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    <div class="oc-snum">03 / 04</div>
+<div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    
+    <div class="oc-tag">● 4月总览 · OVERVIEW</div>
+    <h2 class="oc-h2">探索<span class="oc-g">四大能力方向</span></h2>
+    <p class="oc-sub" style="margin-bottom:24px">Q2 目标：探索可稳定迁移、可长期复用的 AI 自动化工作流经验</p>
+    <div class="oc-grid-4">
+      <div class="oc-card" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:8px">📄</div>
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--oc-text)">文档信息<br>与知识整合</h4>
+        <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">日报自动生成<br>行业早报聚合<br>品牌反馈知识库</p>
+      </div>
+      <div class="oc-card" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:8px">💬</div>
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--oc-text)">办公沟通<br>协作</h4>
+        <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">群消息监听回复<br>业务异动播报<br>实时消息路由</p>
+      </div>
+      <div class="oc-card" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:8px">📊</div>
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--oc-text)">数据处理<br>自动化</h4>
+        <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">看板自动配置+取数<br>定时推送+存储<br>SQL→报告全流程</p>
+      </div>
+      <div class="oc-card" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:8px">⚙️</div>
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--oc-text)">工作台操作<br>流程自动化</h4>
+        <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">门店切换自动化<br>NoCode活动配置<br>浏览器自动操作</p>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--oc-border);margin:14px 0"></div>
+<div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    
+    <div class="oc-tag">● 经验 & 沉淀 · LESSONS</div>
+    <h2 class="oc-h2" style="font-size:34px;margin-bottom:6px">沉淀的<span class="oc-g">经验</span>与<span class="oc-g">思考</span></h2>
+    <p class="oc-sub" style="font-size:15px;margin-top:0;margin-bottom:14px">4月在<b style="color:var(--oc-text)">办公沟通协作、数据处理自动化</b>方向取得了主要进展</p>
+
+    <!-- 左右并列 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:1100px">
+
+      <!-- 左：办公沟通协作 -->
+      <div class="oc-card" style="padding:16px 20px;border-color:rgba(37,99,235,.25)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <span class="oc-badge oc-bb" style="font-size:12px;padding:3px 12px">💬 办公沟通协作方向</span>
+          <span style="font-size:11px;color:var(--oc-dim)">仅自取门店全自动切换 · 群消息监听与回复</span>
+        </div>
+        <p style="font-size:12px;font-weight:600;color:var(--oc-accent3);margin:0 0 5px">📦 沉淀产出</p>
+        <ul style="font-size:13px;color:var(--oc-dim);line-height:1.75;padding-left:14px;margin:0 0 10px">
+          <li><a href="https://km.sankuai.com/collabpage/2755072439" target="_blank" style="color:var(--oc-blue)">官瑾 · 仅自取门店切换全自动流程 Skill</a></li>
+          <li><a href="https://km.sankuai.com/collabpage/2757497314" target="_blank" style="color:var(--oc-blue)">官瑾 · 监听大象消息并分析回复</a></li>
+        </ul>
+        <p style="font-size:12px;font-weight:600;color:var(--oc-green);margin:0 0 5px">💡 思考与感想</p>
+        <ul style="font-size:13px;color:var(--oc-dim);line-height:1.75;padding-left:14px;margin:0">
+          <li>创建 Skill 前先把相关文档喂给 AI，<b style="color:var(--oc-text)">站在前人肩膀上</b>，避开已知坑</li>
+          <li>调试策略：<b style="color:var(--oc-text)">先验证原材料（工具/API），再调试加工逻辑</b>；无输出时先手动跑命令而不是直接改脚本</li>
+          <li>分段验证，找到最小可复现单元，把链路拆成独立小段逐段跑通</li>
+          <li>不同场景下<b style="color:var(--oc-text)">实时性与稳定性需有所侧重</b></li>
+          <li>Skill 规范：跨环境用绝对路径；多语言混写时不在 bash 里嵌套其他代码</li>
+        </ul>
+      </div>
+
+      <!-- 右：数据处理自动化 -->
+      <div class="oc-card" style="padding:16px 20px;border-color:rgba(124,58,237,.25)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <span class="oc-badge oc-bp" style="font-size:12px;padding:3px 12px">📊 数据处理自动化方向</span>
+          <span style="font-size:11px;color:var(--oc-dim)">看板配置 → 下载数据 → 定时推送 → 存储记录</span>
+        </div>
+        <p style="font-size:12px;font-weight:600;color:var(--oc-accent3);margin:0 0 5px">📦 沉淀产出</p>
+        <ul style="font-size:13px;color:var(--oc-dim);line-height:1.75;padding-left:14px;margin:0 0 10px">
+          <li><a href="https://km.sankuai.com/api/file/cdn/2758429548/234246968128?contentType=0&download=true" target="_blank" style="color:var(--oc-blue)">业务异动群播报 Skill</a></li>
+          <li><a href="https://friday.sankuai.com/skills/skill-detail?id=50161" target="_blank" style="color:var(--oc-blue)">金字塔看板每日数据 Skill</a></li>
+          <li><a href="https://friday.sankuai.com/skills/skill-detail?id=42243" target="_blank" style="color:var(--oc-blue)">魔数看板自动化 Skill</a></li>
+        </ul>
+        <p style="font-size:12px;font-weight:600;color:var(--oc-accent3);margin:0 0 5px">💡 各节点思考</p>
+        <ul style="font-size:13px;color:var(--oc-dim);line-height:1.75;padding-left:14px;margin:0 0 10px">
+          <li><b style="color:var(--oc-text)">看板配置</b>：业务口径需详尽前置提供给 AI，避免反复交互导致上下文过长</li>
+          <li><b style="color:var(--oc-text)">下载数据</b>：监听网络层接口判断就绪，而非依赖前端"加载中"提示</li>
+          <li><b style="color:var(--oc-text)">定时推送</b>：制定固定简报模板，减少 AI 自由发挥，降低超时概率</li>
+          <li><b style="color:var(--oc-text)">存储记录</b>：用 OpenViking 记忆体长期存储，可在 CatClaw 内直接调用分析</li>
+        </ul>
+        <p style="font-size:12px;font-weight:600;color:var(--oc-orange);margin:0 0 5px">🔭 整体感受</p>
+        <ul style="font-size:13px;color:var(--oc-dim);line-height:1.75;padding-left:14px;margin:0">
+          <li>现有 Skill 上架→安装→使用流程<b style="color:var(--oc-text)">触达门槛较高</b>，依赖用户主动发现</li>
+          <li>个人助理<b style="color:var(--oc-text)">无法进群</b>；将能力集成到<b style="color:var(--oc-text)">群助理/群机器人</b>可实现多人协同调用</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="slide " style="justify-content:flex-start;padding:40px 64px;overflow-y:auto;font-size:93%">
+    <div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    <div class="oc-snum">04 / 04</div>
+<div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    
+    <div class="oc-tag">● 5月计划 · NEXT STEPS</div>
+    <h2 class="oc-h2" style="margin-bottom:8px">5月 <span class="oc-g">行动计划</span></h2>
+
+    <!-- 5月总结方向 -->
+    <div class="oc-hl" style="margin-bottom:14px;font-size:13.5px;max-width:1100px;line-height:1.75">
+      🎯 <b>5月核心方向：</b>研究如何使用<b>机器人 Agent</b> 自动化工作流。选定具体场景，聚焦共性问题，全员参与同一课题，避免个人干个人的。<br>
+      <span style="color:var(--oc-dim)">💭 <b style="color:var(--oc-text)">关于下一步的思考：</b>现有组内的工作流探索是自己找能力去实现，常发生反复打补丁的情况，这些能力实际上为机器人已有能力。下一步学会使用它，计划将现有 Skill、Memory、流程设计直接挂载到 <b style="color:var(--oc-text)">1024</b> 上，省去个人造轮子的精力。</span>
+    </div>
+
+    <!-- 四个方向 2×2 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:1100px">
+      <div class="oc-card" style="padding:14px 18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="oc-sn" style="width:26px;height:26px;font-size:12px;flex-shrink:0">1</div>
+          <span style="font-size:14px;font-weight:700;color:var(--oc-text)">📄 文档信息与知识整合</span>
+        </div>
+        <p style="font-size:13px;color:var(--oc-dim);line-height:1.7;margin:0">每周抓取 AI 工作流自动化经验分享推送至群内；<br>群聊机器人按模板<b style="color:var(--oc-text)">自动创建周报 wiki</b>，定时发送至群聊</p>
+      </div>
+      <div class="oc-card" style="padding:14px 18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="oc-sn" style="width:26px;height:26px;font-size:12px;flex-shrink:0">2</div>
+          <span style="font-size:14px;font-weight:700;color:var(--oc-text)">💬 办公沟通协作</span>
+        </div>
+        <p style="font-size:13px;color:var(--oc-dim);line-height:1.7;margin:0">群聊机器人实现<b style="color:var(--oc-text)">群监听回复</b>，替代原来的本地实时监听、浏览器巡检，<br>提升稳定性和复用性</p>
+      </div>
+      <div class="oc-card" style="padding:14px 18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="oc-sn" style="width:26px;height:26px;font-size:12px;flex-shrink:0">3</div>
+          <span style="font-size:14px;font-weight:700;color:var(--oc-text)">📊 数据处理自动化</span>
+        </div>
+        <p style="font-size:13px;color:var(--oc-dim);line-height:1.7;margin:0">将个人数据处理 Skill 配置在群聊机器人上，任何人均可直接对话或群内 @ 调用，<br><b style="color:var(--oc-text)">使用者 0 门槛</b></p>
+      </div>
+      <div class="oc-card" style="padding:14px 18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="oc-sn" style="width:26px;height:26px;font-size:12px;flex-shrink:0">4</div>
+          <span style="font-size:14px;font-weight:700;color:var(--oc-text)">⚙️ 工作台操作流程自动化</span>
+        </div>
+        <p style="font-size:13px;color:var(--oc-dim);line-height:1.7;margin:0">群聊机器人调用工作台接口或操作浏览器，实现<b style="color:var(--oc-text)">门店切换和活动配置自动化</b>，<br>减少开发操作页面的精力</p>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--oc-border);margin:20px 0"></div>
+<div class="oc-cbg"></div>
+    <div class="oc-cgrid"></div>
+    
+    <div class="oc-tag">● SUMMARY</div>
+    <div class="oc-quote">
+      <blockquote style="font-size:32px;font-weight:700;background:linear-gradient(120deg,#7c3aed 0%,#2563eb 45%,#059669 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1.55;letter-spacing:-.01em">人设计规则，AI 按规则执行。<br>4月初步跑通四个方向，5月做深替代人。</blockquote>
+      <div class="attr">— 方向一：AI 作为执行者 · 工作流自动化小组</div>
+    </div>
+    <div style="margin-top:36px">
+      <span class="oc-pill">📄 信息整合</span>
+      <span class="oc-pill">💬 沟通协作</span>
+      <span class="oc-pill">📊 数据自动化</span>
+      <span class="oc-pill">⚙️ 操作流程</span>
+    </div>
+    <p class="oc-sub" style="margin-top:28px;font-size:16px">小组成员：王婧怡 · 王桂花 · 王梦峤 · 杨阳 · 官瑾 · 张骥初</p>
+  </section>
+
+</div>
+<script>
+/* html-ppt :: runtime.js
+ * Keyboard-driven deck runtime. Zero dependencies.
+ *
+ * Features:
+ *   ← → / space / PgUp PgDn / Home End  navigation
+ *   F  fullscreen
+ *   S  presenter mode (opens a NEW WINDOW with current/next slide preview + notes + timer)
+ *       The original window stays as audience view, synced via BroadcastChannel.
+ *       Slide previews use CSS transform:scale() at design resolution for pixel-perfect layout.
+ *   N  quick notes overlay (bottom drawer)
+ *   O  slide overview grid
+ *   T  cycle themes (reads data-themes on <html> or <body>)
+ *   A  cycle demo animation on current slide
+ *   URL hash #/N  deep-link to slide N (1-based)
+ *   Progress bar auto-managed
+ */
+(function () {
+  'use strict';
+
+  const ANIMS = ['fade-up','fade-down','fade-left','fade-right','rise-in','drop-in',
+    'zoom-pop','blur-in','glitch-in','typewriter','neon-glow','shimmer-sweep',
+    'gradient-flow','stagger-list','counter-up','path-draw','parallax-tilt',
+    'card-flip-3d','cube-rotate-3d','page-turn-3d','perspective-zoom',
+    'marquee-scroll','kenburns','confetti-burst','spotlight','morph-shape','ripple-reveal'];
+
+  function ready(fn){ if(document.readyState!='loading')fn(); else document.addEventListener('DOMContentLoaded',fn);}
+
+  /* ========== Parse URL for preview-only mode ==========
+   * When loaded as iframe.src = "index.html?preview=3", runtime enters a
+   * locked single-slide mode: only slide N is visible, no chrome, no keys,
+   * no hash updates. This is how the presenter window shows pixel-perfect
+   * previews — by loading the actual deck file in an iframe and telling it
+   * to display only a specific slide.
+   */
+  function getPreviewIdx() {
+    const m = /[?&]preview=(\d+)/.exec(location.search || '');
+    return m ? parseInt(m[1], 10) - 1 : -1;
+  }
+
+  ready(function () {
+    const deck = document.querySelector('.deck');
+    if (!deck) return;
+    const slides = Array.from(deck.querySelectorAll('.slide'));
+    if (!slides.length) return;
+
+    const previewOnlyIdx = getPreviewIdx();
+    const isPreviewMode = previewOnlyIdx >= 0 && previewOnlyIdx < slides.length;
+
+    /* ===== Preview-only mode: show one slide, hide everything else ===== */
+    if (isPreviewMode) {
+      function showSlide(i) {
+        slides.forEach((s, j) => {
+          const active = (j === i);
+          s.classList.toggle('is-active', active);
+          s.style.display = active ? '' : 'none';
+          if (active) {
+            s.style.opacity = '1';
+            s.style.transform = 'none';
+            s.style.pointerEvents = 'auto';
+          }
+        });
+      }
+      showSlide(previewOnlyIdx);
+      /* Hide chrome that the presenter shouldn't see in preview */
+      const hideSel = '.progress-bar, .notes-overlay, .overview, .notes, aside.notes, .speaker-notes';
+      document.querySelectorAll(hideSel).forEach(el => { el.style.display = 'none'; });
+      document.documentElement.setAttribute('data-preview', '1');
+      document.body.setAttribute('data-preview', '1');
+      /* Auto-detect theme base path for theme switching in preview mode */
+      function getPreviewThemeBase() {
+        const base = document.documentElement.getAttribute('data-theme-base');
+        if (base) return base;
+        const tl = document.getElementById('theme-link');
+        if (tl) {
+          const raw = tl.getAttribute('href') || '';
+          const ls = raw.lastIndexOf('/');
+          if (ls >= 0) return raw.substring(0, ls + 1);
+        }
+        return 'assets/themes/';
+      }
+      const previewThemeBase = getPreviewThemeBase();
+
+      /* Listen for postMessage from parent presenter window:
+       *  - preview-goto: switch visible slide WITHOUT reloading
+       *  - preview-theme: switch theme CSS link to match audience window */
+      window.addEventListener('message', function(e) {
+        if (!e.data) return;
+        if (e.data.type === 'preview-goto') {
+          const n = parseInt(e.data.idx, 10);
+          if (n >= 0 && n < slides.length) showSlide(n);
+        } else if (e.data.type === 'preview-theme' && e.data.name) {
+          let link = document.getElementById('theme-link');
+          if (!link) {
+            link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.id = 'theme-link';
+            document.head.appendChild(link);
+          }
+          link.href = previewThemeBase + e.data.name + '.css';
+          document.documentElement.setAttribute('data-theme', e.data.name);
+        }
+      });
+      /* Signal to parent that preview iframe is ready */
+      try { window.parent && window.parent.postMessage({ type: 'preview-ready' }, '*'); } catch(e) {}
+      return;
+    }
+
+    let idx = 0;
+    const total = slides.length;
+
+    /* ===== BroadcastChannel for presenter sync ===== */
+    const CHANNEL_NAME = 'html-ppt-presenter-' + location.pathname;
+    let bc;
+    try { bc = new BroadcastChannel(CHANNEL_NAME); } catch(e) { bc = null; }
+
+    // Are we running inside the presenter popup? (legacy flag, now unused)
+    const isPresenterWindow = false;
+
+    /* ===== progress bar ===== */
+    let bar = document.querySelector('.progress-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'progress-bar';
+      bar.innerHTML = '<span></span>';
+      document.body.appendChild(bar);
+    }
+    const barFill = bar.querySelector('span');
+
+    /* ===== notes overlay (N key) ===== */
+    let notes = document.querySelector('.notes-overlay');
+    if (!notes) {
+      notes = document.createElement('div');
+      notes.className = 'notes-overlay';
+      document.body.appendChild(notes);
+    }
+
+    /* ===== overview grid (O key) ===== */
+    let overview = document.querySelector('.overview');
+    if (!overview) {
+      overview = document.createElement('div');
+      overview.className = 'overview';
+      slides.forEach((s, i) => {
+        const t = document.createElement('div');
+        t.className = 'thumb';
+        // Force 16:9 aspect ratio robustly
+        t.style.padding = '0 0 56.25% 0';
+        t.style.height = '0';
+        t.style.position = 'relative';
+        t.style.overflow = 'hidden';
+
+        const title = s.getAttribute('data-title') ||
+          (s.querySelector('h1,h2,h3')||{}).textContent || ('Slide '+(i+1));
+        
+        // Create a container for the mini-slide
+        const mini = document.createElement('div');
+        mini.className = 'mini-slide';
+        mini.style.position = 'absolute';
+        mini.style.top = '0';
+        mini.style.left = '0';
+        mini.style.width = '1920px';
+        mini.style.height = '1080px';
+        mini.style.transformOrigin = 'top left';
+        mini.style.pointerEvents = 'none';
+        mini.style.background = 'var(--bg)';
+        
+        // Clone the slide content
+        const clone = s.cloneNode(true);
+        clone.className = 'slide is-active'; // force active styles
+        clone.style.position = 'absolute';
+        clone.style.inset = '0';
+        clone.style.transform = 'none';
+        clone.style.opacity = '1';
+        clone.style.padding = '72px 96px'; // ensure padding is kept
+        
+        mini.appendChild(clone);
+        t.appendChild(mini);
+
+        // Add the number and title overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.inset = '0';
+        overlay.style.background = 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.8) 100%)';
+        overlay.style.color = '#fff';
+        overlay.style.zIndex = '10';
+        overlay.style.pointerEvents = 'none';
+        
+        const n = document.createElement('div');
+        n.className = 'n';
+        n.textContent = i + 1;
+        n.style.position = 'absolute';
+        n.style.top = '12px';
+        n.style.left = '16px';
+        n.style.fontWeight = '700';
+        n.style.fontSize = '16px';
+        n.style.color = '#fff';
+        n.style.textShadow = '0 1px 4px rgba(0,0,0,0.8)';
+        
+        const text = document.createElement('div');
+        text.className = 't';
+        text.textContent = title.trim().slice(0,80);
+        text.style.position = 'absolute';
+        text.style.bottom = '12px';
+        text.style.left = '16px';
+        text.style.right = '16px';
+        text.style.fontWeight = '600';
+        text.style.fontSize = '14px';
+        text.style.color = '#fff';
+        text.style.textShadow = '0 1px 4px rgba(0,0,0,0.8)';
+        
+        overlay.appendChild(n);
+        overlay.appendChild(text);
+        t.appendChild(overlay);
+
+        t.addEventListener('click', () => { go(i); toggleOverview(false); });
+        overview.appendChild(t);
+      });
+      document.body.appendChild(overview);
+    }
+
+    /* ===== navigation ===== */
+    function go(n, fromRemote){
+      n = Math.max(0, Math.min(total-1, n));
+      slides.forEach((s,i) => {
+        s.classList.toggle('is-active', i===n);
+        s.classList.toggle('is-prev', i<n);
+      });
+      idx = n;
+      barFill.style.width = ((n+1)/total*100)+'%';
+      const numEl = document.querySelector('.slide-number');
+      if (numEl) { numEl.setAttribute('data-current', n+1); numEl.setAttribute('data-total', total); }
+
+      // notes (bottom overlay)
+      const note = slides[n].querySelector('.notes, aside.notes, .speaker-notes');
+      notes.innerHTML = note ? note.innerHTML : '';
+
+      // hash
+      const hashTarget = '#/'+(n+1);
+      if (location.hash !== hashTarget && !isPresenterWindow) {
+        history.replaceState(null,'', hashTarget);
+      }
+
+      // re-trigger entry animations
+      slides[n].querySelectorAll('[data-anim]').forEach(el => {
+        const a = el.getAttribute('data-anim');
+        el.classList.remove('anim-'+a);
+        void el.offsetWidth;
+        el.classList.add('anim-'+a);
+      });
+
+      // counter-up
+      slides[n].querySelectorAll('.counter').forEach(el => {
+        const target = parseFloat(el.getAttribute('data-to')||el.textContent);
+        const dur = parseInt(el.getAttribute('data-dur')||'1200',10);
+        const start = performance.now();
+        const from = 0;
+        function tick(now){
+          const t = Math.min(1,(now-start)/dur);
+          const v = from + (target-from)*(1-Math.pow(1-t,3));
+          el.textContent = (target % 1 === 0) ? Math.round(v) : v.toFixed(1);
+          if (t<1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+
+      // Broadcast to other window (audience ↔ presenter)
+      if (!fromRemote && bc) {
+        bc.postMessage({ type: 'go', idx: n });
+      }
+    }
+
+    /* ===== listen for remote navigation / theme changes ===== */
+    if (bc) {
+      bc.onmessage = function(e) {
+        if (!e.data) return;
+        if (e.data.type === 'go' && typeof e.data.idx === 'number') {
+          go(e.data.idx, true);
+        } else if (e.data.type === 'theme' && e.data.name) {
+          /* Sync theme across windows */
+          const i = themes.indexOf(e.data.name);
+          if (i >= 0) themeIdx = i;
+          applyTheme(e.data.name);
+        }
+      };
+    }
+
+    function toggleNotes(force){ notes.classList.toggle('open', force!==undefined?force:!notes.classList.contains('open')); }
+    function toggleOverview(force){
+      const isOpen = force!==undefined ? force : !overview.classList.contains('open');
+      overview.classList.toggle('open', isOpen);
+      if (isOpen) {
+        requestAnimationFrame(() => {
+          const thumbs = overview.querySelectorAll('.thumb');
+          if (thumbs.length) {
+            const scale = thumbs[0].clientWidth / 1920;
+            overview.querySelectorAll('.mini-slide').forEach(m => {
+              m.style.transform = 'scale(' + scale + ')';
+            });
+          }
+        });
+      }
+    }
+
+    /* ========== PRESENTER MODE — Magnetic-card popup window ========== */
+    /* Opens a new window with 4 draggable, resizable cards:
+     *   CURRENT  — iframe(?preview=N)   pixel-perfect preview of current slide
+     *   NEXT     — iframe(?preview=N+1) pixel-perfect preview of next slide
+     *   SCRIPT   — large speaker notes (逐字稿)
+     *   TIMER    — elapsed timer + page counter + controls
+     * Cards remember position/size in localStorage.
+     * Two windows sync via BroadcastChannel.
+     */
+    let presenterWin = null;
+
+    function openPresenterWindow() {
+      if (presenterWin && !presenterWin.closed) {
+        presenterWin.focus();
+        return;
+      }
+
+      // Build absolute URL of THIS deck file (without hash/query)
+      const deckUrl = location.protocol + '//' + location.host + location.pathname;
+
+      // Collect slide titles + notes (HTML strings)
+      const slideMeta = slides.map((s, i) => {
+        const note = s.querySelector('.notes, aside.notes, .speaker-notes');
+        return {
+          title: s.getAttribute('data-title') ||
+            (s.querySelector('h1,h2,h3')||{}).textContent || ('Slide '+(i+1)),
+          notes: note ? note.innerHTML : ''
+        };
+      });
+
+      /* Capture current theme so presenter previews match the audience */
+      const currentTheme = root.getAttribute('data-theme') || (themes[themeIdx] || '');
+      const presenterHTML = buildPresenterHTML(deckUrl, slideMeta, total, idx, CHANNEL_NAME, currentTheme);
+
+      presenterWin = window.open('', 'html-ppt-presenter', 'width=1280,height=820,menubar=no,toolbar=no');
+      if (!presenterWin) {
+        alert('请允许弹出窗口以使用演讲者视图');
+        return;
+      }
+      presenterWin.document.open();
+      presenterWin.document.write(presenterHTML);
+      presenterWin.document.close();
+    }
+
+    function buildPresenterHTML(deckUrl, slideMeta, total, startIdx, channelName, currentTheme) {
+      const metaJSON = JSON.stringify(slideMeta);
+      const deckUrlJSON = JSON.stringify(deckUrl);
+      const channelJSON = JSON.stringify(channelName);
+      const themeJSON = JSON.stringify(currentTheme || '');
+      const storageKey = 'html-ppt-presenter:' + location.pathname;
+
+      // Build the document as a single template string for clarity
+      return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Presenter View</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #1a1d24;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(88,166,255,.04), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(188,140,255,.04), transparent 50%);
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+  }
+  /* Stage: positioned area where cards live */
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+
+  /* Magnetic card */
+  .pcard {
+    position: absolute;
+    background: #0d1117;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.02);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    min-width: 180px; min-height: 100px;
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .pcard.dragging { box-shadow: 0 16px 48px rgba(0,0,0,.6), 0 0 0 2px rgba(88,166,255,.5); border-color: #58a6ff; transition: none; z-index: 9999; }
+  .pcard.resizing { box-shadow: 0 16px 48px rgba(0,0,0,.6), 0 0 0 2px rgba(63,185,80,.5); border-color: #3fb950; transition: none; z-index: 9999; }
+  .pcard:hover { border-color: rgba(88,166,255,.3); }
+
+  /* Card header (drag handle) */
+  .pcard-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,.04);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    cursor: move;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .pcard-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot-color, #58a6ff); flex-shrink: 0; }
+  .pcard-title {
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    font-weight: 700; color: #8b949e; flex: 1;
+  }
+  .pcard-meta { font-size: 11px; color: #6e7681; }
+
+  /* Card body */
+  .pcard-body { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+
+  /* Preview cards (CURRENT/NEXT) — iframe-based pixel-perfect render */
+  .pcard-preview .pcard-body { background: #000; }
+  .pcard-preview iframe {
+    position: absolute; top: 0; left: 0;
+    width: 1920px; height: 1080px;
+    border: none;
+    transform-origin: top left;
+    pointer-events: none;
+    background: transparent;
+  }
+  .pcard-preview .preview-end {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #484f58; font-size: 14px; letter-spacing: .12em;
+  }
+
+  /* Notes card */
+  .pcard-notes .pcard-body {
+    padding: 14px 18px;
+    overflow-y: auto;
+    font-size: 18px; line-height: 1.75;
+    color: #d0d7de;
+    font-family: "Noto Sans SC", -apple-system, sans-serif;
+  }
+  .pcard-notes .pcard-body p { margin: 0 0 .7em 0; }
+  .pcard-notes .pcard-body strong { color: #f0883e; }
+  .pcard-notes .pcard-body em { color: #58a6ff; font-style: normal; }
+  .pcard-notes .pcard-body code {
+    font-family: "SF Mono", monospace; font-size: .9em;
+    background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 4px;
+  }
+  .pcard-notes .empty { color: #484f58; font-style: italic; }
+
+  /* Timer card */
+  .pcard-timer .pcard-body {
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 18px 20px; justify-content: center;
+  }
+  .timer-display {
+    font-family: "SF Mono", "JetBrains Mono", monospace;
+    font-size: 42px; font-weight: 700;
+    color: #3fb950;
+    letter-spacing: .04em;
+    line-height: 1;
+  }
+  .timer-row {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: #8b949e;
+  }
+  .timer-row .label { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: #6e7681; }
+  .timer-row .val { color: #e6edf3; font-weight: 600; font-family: "SF Mono", monospace; }
+  .timer-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+  .timer-btn {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #e6edf3;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .timer-btn:hover { background: rgba(37,99,235,.08); border-color: #58a6ff; }
+  .timer-btn:active { transform: translateY(1px); }
+
+  /* Resize handle */
+  .pcard-resize {
+    position: absolute; right: 0; bottom: 0;
+    width: 18px; height: 18px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,.25) 50%, rgba(255,255,255,.25) 60%, transparent 60%, transparent 70%, rgba(255,255,255,.25) 70%, rgba(255,255,255,.25) 80%, transparent 80%);
+    z-index: 5;
+  }
+  .pcard-resize:hover { background: linear-gradient(135deg, transparent 50%, #58a6ff 50%, #58a6ff 60%, transparent 60%, transparent 70%, #58a6ff 70%, #58a6ff 80%, transparent 80%); }
+
+  /* Bottom hint bar */
+  .hint-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 6px 16px;
+    font-size: 11px; color: #8b949e;
+    display: flex; gap: 18px; align-items: center;
+    z-index: 1000;
+  }
+  .hint-bar kbd {
+    background: rgba(255,255,255,.08);
+    padding: 1px 6px; border-radius: 3px;
+    font-family: "SF Mono", monospace;
+    font-size: 10px;
+    border: 1px solid rgba(255,255,255,.1);
+    color: #e6edf3;
+  }
+  .hint-bar .reset-layout {
+    margin-left: auto;
+    background: transparent; border: 1px solid rgba(255,255,255,.15);
+    color: #8b949e; padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; cursor: pointer; font-family: inherit;
+  }
+  .hint-bar .reset-layout:hover { background: rgba(248,81,73,.15); border-color: #f85149; color: #f85149; }
+
+  body.is-dragging-card * { user-select: none !important; }
+  body.is-dragging-card iframe { pointer-events: none !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="pcard pcard-preview" id="card-cur" style="--dot-color:#58a6ff">
+    <div class="pcard-head" data-drag>
+      <span class="pcard-dot"></span>
+      <span class="pcard-title">CURRENT</span>
+      <span class="pcard-meta" id="cur-meta">—</span>
+    </div>
+    <div class="pcard-body"><iframe id="iframe-cur"></iframe></div>
+    <div class="pcard-resize" data-resize></div>
+  </div>
+
+  <div class="pcard pcard-preview" id="card-nxt" style="--dot-color:#bc8cff">
+    <div class="pcard-head" data-drag>
+      <span class="pcard-dot"></span>
+      <span class="pcard-title">NEXT</span>
+      <span class="pcard-meta" id="nxt-meta">—</span>
+    </div>
+    <div class="pcard-body"><iframe id="iframe-nxt"></iframe></div>
+    <div class="pcard-resize" data-resize></div>
+  </div>
+
+  <div class="pcard pcard-notes" id="card-notes" style="--dot-color:#f0883e">
+    <div class="pcard-head" data-drag>
+      <span class="pcard-dot"></span>
+      <span class="pcard-title">SPEAKER SCRIPT · 逐字稿</span>
+    </div>
+    <div class="pcard-body" id="notes-body"></div>
+    <div class="pcard-resize" data-resize></div>
+  </div>
+
+  <div class="pcard pcard-timer" id="card-timer" style="--dot-color:#3fb950">
+    <div class="pcard-head" data-drag>
+      <span class="pcard-dot"></span>
+      <span class="pcard-title">TIMER</span>
+    </div>
+    <div class="pcard-body">
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div class="timer-row">
+        <span class="label">Slide</span>
+        <span class="val" id="timer-count">1 / ${total}</span>
+      </div>
+      <div class="timer-controls">
+        <button class="timer-btn" id="btn-prev">← Prev</button>
+        <button class="timer-btn" id="btn-next">Next →</button>
+        <button class="timer-btn" id="btn-reset">⏱ Reset</button>
+      </div>
+    </div>
+    <div class="pcard-resize" data-resize></div>
+  </div>
+</div>
+
+<div class="hint-bar">
+  <span><kbd>← →</kbd> 翻页</span>
+  <span><kbd>R</kbd> 重置计时</span>
+  <span><kbd>Esc</kbd> 关闭</span>
+  <span style="color:#6e7681">拖动卡片头部移动 · 拖动右下角调整大小</span>
+  <button class="reset-layout" id="reset-layout">重置布局</button>
+</div>
+
+<script>
+(function(){
+  var slideMeta = ${metaJSON};
+  var total = ${total};
+  var idx = ${startIdx};
+  var deckUrl = ${deckUrlJSON};
+  var STORAGE_KEY = ${JSON.stringify(storageKey)};
+  var bc;
+  try { bc = new BroadcastChannel(${channelJSON}); } catch(e) {}
+
+  var iframeCur = document.getElementById('iframe-cur');
+  var iframeNxt = document.getElementById('iframe-nxt');
+  var notesBody = document.getElementById('notes-body');
+  var curMeta = document.getElementById('cur-meta');
+  var nxtMeta = document.getElementById('nxt-meta');
+  var timerDisplay = document.getElementById('timer-display');
+  var timerCount = document.getElementById('timer-count');
+
+  /* ===== Default card layout ===== */
+  function defaultLayout() {
+    var w = window.innerWidth;
+    var h = window.innerHeight - 36; /* leave room for hint bar */
+    return {
+      'card-cur':   { x: 16,        y: 16,            w: Math.round(w*0.55) - 24, h: Math.round(h*0.62) - 16 },
+      'card-nxt':   { x: Math.round(w*0.55) + 8, y: 16, w: w - Math.round(w*0.55) - 24, h: Math.round(h*0.42) - 16 },
+      'card-notes': { x: Math.round(w*0.55) + 8, y: Math.round(h*0.42) + 8, w: w - Math.round(w*0.55) - 24, h: h - Math.round(h*0.42) - 16 },
+      'card-timer': { x: 16,        y: Math.round(h*0.62) + 8, w: Math.round(w*0.55) - 24, h: h - Math.round(h*0.62) - 16 }
+    };
+  }
+
+  /* ===== Apply / save / restore layout ===== */
+  function applyLayout(layout) {
+    Object.keys(layout).forEach(function(id){
+      var el = document.getElementById(id);
+      var l = layout[id];
+      if (el && l) {
+        el.style.left = l.x + 'px';
+        el.style.top = l.y + 'px';
+        el.style.width = l.w + 'px';
+        el.style.height = l.h + 'px';
+      }
+    });
+    rescaleAll();
+  }
+  function readLayout() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    return defaultLayout();
+  }
+  function saveLayout() {
+    var layout = {};
+    ['card-cur','card-nxt','card-notes','card-timer'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) {
+        layout[id] = {
+          x: parseInt(el.style.left,10) || 0,
+          y: parseInt(el.style.top,10) || 0,
+          w: parseInt(el.style.width,10) || 300,
+          h: parseInt(el.style.height,10) || 200
+        };
+      }
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(layout)); } catch(e) {}
+  }
+
+  /* ===== iframe rescale to fit card body ===== */
+  function rescaleIframe(iframe) {
+    if (!iframe || iframe.style.display === 'none') return;
+    var body = iframe.parentElement;
+    var cw = body.clientWidth, ch = body.clientHeight;
+    if (!cw || !ch) return;
+    var s = Math.min(cw / 1920, ch / 1080);
+    iframe.style.transform = 'scale(' + s + ')';
+    /* Center the scaled iframe in the body */
+    var sw = 1920 * s, sh = 1080 * s;
+    iframe.style.left = Math.max(0, (cw - sw) / 2) + 'px';
+    iframe.style.top = Math.max(0, (ch - sh) / 2) + 'px';
+  }
+  function rescaleAll() {
+    rescaleIframe(iframeCur);
+    rescaleIframe(iframeNxt);
+  }
+  window.addEventListener('resize', rescaleAll);
+
+  /* ===== Drag (move card by header) ===== */
+  document.querySelectorAll('[data-drag]').forEach(function(handle){
+    handle.addEventListener('mousedown', function(e){
+      if (e.button !== 0) return;
+      var card = handle.closest('.pcard');
+      if (!card) return;
+      e.preventDefault();
+      card.classList.add('dragging');
+      document.body.classList.add('is-dragging-card');
+      var startX = e.clientX, startY = e.clientY;
+      var startL = parseInt(card.style.left,10) || 0;
+      var startT = parseInt(card.style.top,10)  || 0;
+      function onMove(ev){
+        var nx = Math.max(0, Math.min(window.innerWidth - 100, startL + ev.clientX - startX));
+        var ny = Math.max(0, Math.min(window.innerHeight - 50, startT + ev.clientY - startY));
+        card.style.left = nx + 'px';
+        card.style.top = ny + 'px';
+      }
+      function onUp(){
+        card.classList.remove('dragging');
+        document.body.classList.remove('is-dragging-card');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        saveLayout();
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+
+  /* ===== Resize (drag bottom-right corner) ===== */
+  document.querySelectorAll('[data-resize]').forEach(function(handle){
+    handle.addEventListener('mousedown', function(e){
+      if (e.button !== 0) return;
+      var card = handle.closest('.pcard');
+      if (!card) return;
+      e.preventDefault(); e.stopPropagation();
+      card.classList.add('resizing');
+      document.body.classList.add('is-dragging-card');
+      var startX = e.clientX, startY = e.clientY;
+      var startW = parseInt(card.style.width,10)  || card.offsetWidth;
+      var startH = parseInt(card.style.height,10) || card.offsetHeight;
+      function onMove(ev){
+        var nw = Math.max(180, startW + ev.clientX - startX);
+        var nh = Math.max(100, startH + ev.clientY - startY);
+        card.style.width = nw + 'px';
+        card.style.height = nh + 'px';
+        if (card.querySelector('iframe')) rescaleIframe(card.querySelector('iframe'));
+      }
+      function onUp(){
+        card.classList.remove('resizing');
+        document.body.classList.remove('is-dragging-card');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        rescaleAll();
+        saveLayout();
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+
+  /* ===== Preview iframe ready tracking =====
+   * Each iframe loads the deck ONCE with ?preview=1 on init. Subsequent
+   * slide changes are sent via postMessage('preview-goto') so the iframe
+   * just toggles visibility of a different .slide — no reload, no flicker.
+   */
+  var iframeReady = { cur: false, nxt: false };
+  var currentTheme = ${themeJSON};
+  window.addEventListener('message', function(e) {
+    if (!e.data || e.data.type !== 'preview-ready') return;
+    var iframe = null;
+    if (e.source === iframeCur.contentWindow) {
+      iframeReady.cur = true;
+      iframe = iframeCur;
+      postPreviewGoto(iframeCur, idx);
+    } else if (e.source === iframeNxt.contentWindow) {
+      iframeReady.nxt = true;
+      iframe = iframeNxt;
+      postPreviewGoto(iframeNxt, idx + 1 < total ? idx + 1 : idx);
+    }
+    /* Sync current theme to the iframe */
+    if (iframe && currentTheme) {
+      try { iframe.contentWindow.postMessage({ type: 'preview-theme', name: currentTheme }, '*'); } catch(err) {}
+    }
+    if (iframe) rescaleIframe(iframe);
+  });
+
+  function postPreviewGoto(iframe, n) {
+    try {
+      iframe.contentWindow.postMessage({ type: 'preview-goto', idx: n }, '*');
+    } catch(e) {}
+  }
+
+  /* ===== Update content =====
+   * Smooth (no-reload) navigation: send postMessage to iframes instead of
+   * resetting src. Iframes stay loaded, just switch visible .slide.
+   */
+  function update(n) {
+    n = Math.max(0, Math.min(total - 1, n));
+    idx = n;
+
+    /* Current preview — postMessage (smooth) */
+    if (iframeReady.cur) postPreviewGoto(iframeCur, n);
+    curMeta.textContent = (n + 1) + '/' + total;
+
+    /* Next preview */
+    if (n + 1 < total) {
+      iframeNxt.style.display = '';
+      var endEl = document.querySelector('#card-nxt .preview-end');
+      if (endEl) endEl.remove();
+      if (iframeReady.nxt) postPreviewGoto(iframeNxt, n + 1);
+      nxtMeta.textContent = (n + 2) + '/' + total;
+    } else {
+      iframeNxt.style.display = 'none';
+      var body = document.querySelector('#card-nxt .pcard-body');
+      if (body && !body.querySelector('.preview-end')) {
+        var end = document.createElement('div');
+        end.className = 'preview-end';
+        end.textContent = '— END OF DECK —';
+        body.appendChild(end);
+      }
+      nxtMeta.textContent = 'END';
+    }
+
+    /* Notes */
+    var note = slideMeta[n].notes;
+    notesBody.innerHTML = note || '<span class="empty">（这一页还没有逐字稿）</span>';
+
+    /* Timer count */
+    timerCount.textContent = (n + 1) + ' / ' + total;
+  }
+
+  /* ===== Timer ===== */
+  var tStart = Date.now();
+  setInterval(function(){
+    var s = Math.floor((Date.now() - tStart) / 1000);
+    var mm = String(Math.floor(s/60)).padStart(2,'0');
+    var ss = String(s%60).padStart(2,'0');
+    timerDisplay.textContent = mm + ':' + ss;
+  }, 1000);
+  function resetTimer(){ tStart = Date.now(); timerDisplay.textContent = '00:00'; }
+
+  /* ===== BroadcastChannel sync ===== */
+  if (bc) {
+    bc.onmessage = function(e){
+      if (!e.data) return;
+      if (e.data.type === 'go') update(e.data.idx);
+      else if (e.data.type === 'theme' && e.data.name) {
+        currentTheme = e.data.name;
+        /* Forward theme change to preview iframes */
+        [iframeCur, iframeNxt].forEach(function(iframe){
+          try {
+            iframe.contentWindow.postMessage({ type: 'preview-theme', name: e.data.name }, '*');
+          } catch(err) {}
+        });
+      }
+    };
+  }
+  function go(n) {
+    update(n);
+    if (bc) bc.postMessage({ type: 'go', idx: idx });
+  }
+
+  /* ===== Buttons ===== */
+  document.getElementById('btn-prev').addEventListener('click', function(){ go(idx - 1); });
+  document.getElementById('btn-next').addEventListener('click', function(){ go(idx + 1); });
+  document.getElementById('btn-reset').addEventListener('click', resetTimer);
+  document.getElementById('reset-layout').addEventListener('click', function(){
+    if (confirm('恢复默认卡片布局？')) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+      applyLayout(defaultLayout());
+    }
+  });
+
+  /* ===== Keyboard ===== */
+  document.addEventListener('keydown', function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    switch(e.key) {
+      case 'ArrowRight': case ' ': case 'PageDown': go(idx + 1); e.preventDefault(); break;
+      case 'ArrowLeft':  case 'PageUp':   go(idx - 1); e.preventDefault(); break;
+      case 'Home': go(0); break;
+      case 'End':  go(total - 1); break;
+      case 'r': case 'R': resetTimer(); break;
+      case 'Escape': window.close(); break;
+    }
+  });
+
+  /* ===== Iframe load → rescale (catches initial size) ===== */
+  iframeCur.addEventListener('load', function(){ rescaleIframe(iframeCur); });
+  iframeNxt.addEventListener('load', function(){ rescaleIframe(iframeNxt); });
+
+  /* ===== Init =====
+   * Load each iframe ONCE with the deck file. After they post
+   * 'preview-ready', all subsequent navigation is via postMessage
+   * (smooth, no reload, no flicker).
+   */
+  applyLayout(readLayout());
+  iframeCur.src = deckUrl + '?preview=' + (idx + 1);
+  if (idx + 1 < total) iframeNxt.src = deckUrl + '?preview=' + (idx + 2);
+  /* Initialize notes/timer/count without touching iframes */
+  notesBody.innerHTML = slideMeta[idx].notes || '<span class="empty">（这一页还没有逐字稿）</span>';
+  curMeta.textContent = (idx + 1) + '/' + total;
+  nxtMeta.textContent = (idx + 2) + '/' + total;
+  timerCount.textContent = (idx + 1) + ' / ' + total;
+})();
+</` + `script>
+</body></html>`;
+    }
+
+    function fullscreen(){ const el=document.documentElement;
+      if (!document.fullscreenElement) el.requestFullscreen&&el.requestFullscreen();
+      else document.exitFullscreen&&document.exitFullscreen();
+    }
+
+    // theme cycling
+    const root = document.documentElement;
+    const themesAttr = root.getAttribute('data-themes') || document.body.getAttribute('data-themes');
+    const themes = themesAttr ? themesAttr.split(',').map(s=>s.trim()).filter(Boolean) : [];
+    let themeIdx = 0;
+
+    // Auto-detect theme base path from existing <link id="theme-link">
+    let themeBase = root.getAttribute('data-theme-base');
+    if (!themeBase) {
+      const existingLink = document.getElementById('theme-link');
+      if (existingLink) {
+        // el.getAttribute('href') gives the raw relative path written in HTML
+        const rawHref = existingLink.getAttribute('href') || '';
+        const lastSlash = rawHref.lastIndexOf('/');
+        themeBase = lastSlash >= 0 ? rawHref.substring(0, lastSlash + 1) : 'assets/themes/';
+      } else {
+        themeBase = 'assets/themes/';
+      }
+    }
+
+    function applyTheme(name) {
+      let link = document.getElementById('theme-link');
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.id = 'theme-link';
+        document.head.appendChild(link);
+      }
+      link.href = themeBase + name + '.css';
+      root.setAttribute('data-theme', name);
+      const ind = document.querySelector('.theme-indicator');
+      if (ind) ind.textContent = name;
+    }
+    function cycleTheme(fromRemote){
+      if (!themes.length) return;
+      themeIdx = (themeIdx+1) % themes.length;
+      const name = themes[themeIdx];
+      applyTheme(name);
+      /* Broadcast to other window (audience ↔ presenter) */
+      if (!fromRemote && bc) bc.postMessage({ type: 'theme', name: name });
+    }
+
+    // animation cycling on current slide
+    let animIdx = 0;
+    function cycleAnim(){
+      animIdx = (animIdx+1) % ANIMS.length;
+      const a = ANIMS[animIdx];
+      const target = slides[idx].querySelector('[data-anim-target]') || slides[idx];
+      ANIMS.forEach(x => target.classList.remove('anim-'+x));
+      void target.offsetWidth;
+      target.classList.add('anim-'+a);
+      target.setAttribute('data-anim', a);
+      const ind = document.querySelector('.anim-indicator');
+      if (ind) ind.textContent = a;
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey||e.ctrlKey||e.altKey) return;
+      switch (e.key) {
+        case 'ArrowRight': case ' ': case 'PageDown': case 'Enter': go(idx+1); e.preventDefault(); break;
+        case 'ArrowLeft': case 'PageUp': case 'Backspace': go(idx-1); e.preventDefault(); break;
+        case 'Home': go(0); break;
+        case 'End': go(total-1); break;
+        case 'f': case 'F': fullscreen(); break;
+        case 's': case 'S': openPresenterWindow(); break;
+        case 'n': case 'N': toggleNotes(); break;
+        case 'o': case 'O': toggleOverview(); break;
+        case 't': case 'T': cycleTheme(); break;
+        case 'a': case 'A': cycleAnim(); break;
+        case 'Escape': toggleOverview(false); toggleNotes(false); break;
+      }
+    });
+
+    // hash deep-link
+    function fromHash(){
+      const m = /^#\/(\d+)/.exec(location.hash||'');
+      if (m) go(Math.max(0, parseInt(m[1],10)-1));
+    }
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+    go(idx);
+  });
+})();
+
+</script>
+</body>
+</html>
