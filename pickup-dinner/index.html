@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>回家顺路带晚饭 · 产品作品展示 · 公网演示版</title>
+  <link rel="stylesheet" href="./answer.css">
+  <script src="./answer.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#answer">回家顺路<br><span>带晚饭</span></a>
+    <p class="sidebarMeta">场景洞察与可交互原型<br>下班回家 · 顺路自取</p>
+    <nav aria-label="作品目录">
+      <a href="#answer">—<span>问题与作品</span></a>
+      <a href="#intro">01<span>产品介绍<small>定位 · 场景 · 主循环</small></span></a>
+      <a href="#research">02<span>场景洞察<small>判断 · 假设 · 适用边界</small></span></a>
+      <a href="#demo">03<span>作品展示<small>可点击原型 · 演示路径</small></span></a>
+      <a href="#core">04<span>核心能力介绍<small>实付 · 绕行 · AI 分工</small></span></a>
+      <a href="#growth">05<span>运营推广计划<small>试点 · 验证 · 指标</small></span></a>
+      <a href="#keys">06<span>成功的关键要素<small>协作依赖 · 迭代 · 交付</small></span></a>
+    </nav>
+    <div class="sidebarFoot"><span class="dot"></span>可交互原型已完成<br>用户效果与 AI 增量待验证</div>
+  </aside>
+
+  <main>
+    <header id="answer" class="hero anchor">
+      <div class="metaRow"><span class="eyebrow">产品问题 · 如何让更多人想得起自取？</span><span class="date">公开展示版 · 2026.11.20</span></div>
+      <div class="brief"><strong>赛题的起点</strong><p>门店就在楼下或回家路上，用户却仍习惯外送；即使用过自取，下一次决定晚餐时也未必想得起来。</p><div class="briefChoice">本作品选择：<b>下班回家前，顺路带一份正餐。</b></div></div>
+      <p class="eyebrow orange">产品作品 · 场景洞察与可交互原型</p>
+      <h1>回家顺路带晚饭</h1>
+      <p class="heroLine">让自取出现在，<mark>还来得及顺手带一餐</mark>的时候。</p>
+      <p class="heroDescription">面向用过自取、平时仍习惯外送的上班族，把“今晚吃什么”与“回家怎么走”放进同一次决策：吃哪份、绕多久、实际付多少、何时能取，一次说清楚。</p>
+      <div class="heroActions"><a class="button primary" href="#demo">体验完整原型 <span aria-hidden="true">→</span></a><a class="button secondary" href="#research">查看场景洞察</a><button class="textButton" id="printAnswer" type="button">打印作品</button></div>
+      <div class="deliveryFacts"><div><strong>交付了什么</strong><span>可点击的完整 H5 链路</span></div><div><strong>依据是什么</strong><span>场景归纳与待验证的产品假设</span></div><div><strong>还没证明什么</strong><span>真实转化、复用与 AI 交互增量</span></div></div>
+    </header>
+
+    <section id="intro" class="anchor section">
+      <h2><span>01</span>产品介绍</h2>
+      <div class="statement"><span class="label">一句话 PMF · 待验证的需求匹配假设</span><p>为<strong>有晚餐需求、尚未到家、回家动线上有合适门店的上班族</strong>，在决定今晚吃什么时，给出一份能执行的顺路取餐建议，让自取成为当下可比较、可完成的晚餐选择。</p></div>
+      <div class="grid three">
+        <article class="card"><span class="label">为谁</span><h3>用过，却不是默认选择的人</h3><p>优先关注低频自取、平时仍用外送的上班族。不把已经形成顺路取餐习惯的高频用户当作全部目标人群。</p></article>
+        <article class="card"><span class="label">在哪一刻</span><h3>下班回家前，打开 App 想晚饭</h3><p>用户还在工作地点或通勤末端，有取餐机会，也准备回家吃。这一刻的任务是安排晚饭，不是研究“自取”功能。</p></article>
+        <article class="card"><span class="label">提供什么</span><h3>一份能判断、能行动的建议</h3><p>确认方向和预算，比较少量正餐候选，把实付、绕行与备餐放在一起；选择之后，接上取餐信息和下次复用。</p></article>
+      </div>
+      <h3 class="subheading">主循环如何成立</h3>
+      <p class="lead">核心假设是：<mark>在回家前想起一次，并把这次取餐做好，才有机会支持下一次再用。</mark>入口、决策与履约不能各做一半。</p>
+      <ol class="loop">
+        <li><span>01 · 唤起</span><strong>想晚饭时看见建议</strong><p>从“默认外送”里，多看一眼顺路自取。</p></li>
+        <li><span>02 · 判断</span><strong>看清值不值得取</strong><p>同一份餐，比较总支付、额外绕行和可取时间。</p></li>
+        <li><span>03 · 完成</span><strong>知道去哪里、怎么拿</strong><p>确认门店与入口，不把到店等同于出餐。</p></li>
+        <li><span>04 · 复用</span><strong>下次不必重新描述</strong><p>自愿保存常用路线，每次预填后再确认。</p></li>
+      </ol>
+      <div class="callout"><strong>当前最大的触达缺口</strong><p>原型入口已经放进<strong>自取首页</strong>，但“已经进入自取页”本身就意味着一定意图。这能验证建议是否好理解、流程是否好用，<strong>还不能证明能唤起默认外送的人</strong>。面向平台主首页等晚餐决策触点的曝光位置，仍需争取与验证，尚未实现。</p></div>
+      <p class="muted">已经到家不想出门、当天无合适供给、天气或行动条件不适合时，不强行推荐。合理退出也是产品能力。</p>
+    </section>
+
+    <section id="research" class="anchor section">
+      <h2><span>02</span>场景洞察</h2>
+      <p class="lead">让自取进入晚餐选择，可能需要同时满足三件事：<mark>时机合适、值得顺手取、结果能兑现。</mark>下面是本作品的设计推理和待验证假设，并非已证实的增长结论。</p>
+      <div class="grid three">
+        <article class="card"><span class="tag">时机</span><h3>还没有到家，才有顺手取的机会</h3><p>设想用户已经回家，再提醒附近门店，可能意味着重新出门。作品因此选择下班回家前的晚餐决策，而非全天泛提醒。</p><p><b>待验证：</b>这一时刻的提示，是否真的能让默认选择外送的人考虑自取？</p></article>
+        <article class="card"><span class="tag">判断</span><h3>想起之后，还要看清值不值得</h3><p>只显示距离或配送费减免，仍不足以决定是否取餐。需要同时比较同一份餐的最终实付、额外绕行和预计可取时间。</p><p><b>待验证：</b>集中展示这些信息，能否减少误解并帮助用户作出选择？</p></article>
+        <article class="card"><span class="tag">兑现</span><h3>能顺利拿到，才有下一次复用</h3><p>路线、价格和备餐预期若不能兑现，提醒可能带来额外负担。因此要允许退出，并明确告知未知状态，而非承诺到店零等待。</p><p><b>待验证：</b>一次顺利体验与常用路线复用，能否支持下次再用？</p></article>
+      </div>
+      <div class="tableWrap"><table><thead><tr><th>用户可能遇到的障碍</th><th>产品回应</th><th>需要观察什么</th></tr></thead><tbody>
+        <tr><td>决定晚饭时，没有自然想到自取。</td><td>回家前的场景入口，用户主动确认方向。</td><td>先做无提示的晚餐任务，再观察提示是否有帮助。</td></tr>
+        <tr><td>不知道哪家顺路、实付多少、何时能取。</td><td>少量候选集中展示路线、价格与备餐信息。</td><td>能否独立解释价差与绕行，而非只点击按钮。</td></tr>
+        <tr><td>担心到店等餐，下一次又要重新描述。</td><td>未知备餐提示、合理退出、自愿保存常用偏好。</td><td>记录等待理解、拒绝原因，以及下一次是否自发使用。</td></tr>
+      </tbody></table></div>
+      <div class="callout neutral"><strong>公开展示范围</strong><p>本页不公开个人访谈、内部研究文档或业务数据。当前仅为产品概念与交互原型，没有新增用户研究、线上实验或转化效果证明；不能由本原型推算用户规模和增长幅度。</p></div>
+    </section>
+
+    <section id="demo" class="anchor section">
+      <h2><span>03</span>作品展示</h2>
+      <p class="lead">下面嵌入的是<mark>真实可点击的原型</mark>，不是截图。建议先走主流程，再看“没有价格优势”“备餐未知”和“没有合适供给”时，产品如何处理。</p>
+      <div class="caseTabs" role="tablist" aria-label="演示路径"><button type="button" role="tab" id="tab-main" aria-selected="true" aria-controls="caseGuide" data-case="main">主流程</button><button type="button" role="tab" id="tab-equal" aria-selected="false" aria-controls="caseGuide" data-case="equal">同价与更贵</button><button type="button" role="tab" id="tab-unknown" aria-selected="false" aria-controls="caseGuide" data-case="unknown">备餐未知</button><button type="button" role="tab" id="tab-empty" aria-selected="false" aria-controls="caseGuide" data-case="empty">没有合适供给</button></div>
+      <div class="demoGrid">
+        <div class="demoGuide"><div id="caseGuide" role="tabpanel" aria-labelledby="tab-main" tabindex="0"></div><div class="demoControls"><a class="button secondary" href="./demo/index.html" target="_blank" rel="noopener">在新窗口体验</a><button type="button" class="textButton" id="resetDemo">重置原型与测试偏好</button></div><p id="demoStatus" class="muted" role="status"></p><div class="callout compact"><strong>原型边界</strong><p>门店、价格、路线、备餐和订单均为固定示例，不读取实时定位，不产生真实支付或门店通知。当前自然语言输入采用关键词规则，尚未调用在线大模型；界面中的“基于AI模型推荐”为目标态文案。</p></div></div>
+        <div class="phone"><div class="phoneTop">可交互 H5 · 当前交付版本</div><iframe id="demoFrame" src="./demo/index.html" title="回家顺路带晚饭可交互原型" loading="lazy"></iframe></div>
+      </div>
+      <div class="statusStrip"><span><i class="statusDot ready"></i>已实现：条件、比较、订单与取餐交互</span><span><i class="statusDot pending"></i>待接入：真实供给、计价、路线、模型和交易</span><span><i class="statusDot pending"></i>待验证：用户任务表现与业务效果</span></div>
+    </section>
+
+    <section id="core" class="anchor section">
+      <h2><span>04</span>核心能力介绍</h2>
+      <p class="lead">一句建议要能被执行，底下必须同时有<mark>价值判断、路线判断和履约预期</mark>。自然语言只是输入方式，不能替代事实底座。</p>
+      <h3 class="subheading">同一份餐，比的是最终实付</h3>
+      <p>按同一餐品组合分别计算餐品、打包、配送和优惠。金额以整数分计算，最后显示差额；不把“免配送费”直接等同于自取更省。</p>
+      <div class="formula">最终实付 = 餐品金额 + 打包费 + 配送费 − 适用优惠<br><span>自取价差 = 配送最终实付 − 自取最终实付</span></div>
+      <div class="grid three priceCases">
+        <article class="card"><span class="tag">场景一 · 自取更省</span><h3>香菇鸡腿饭</h3><p>自取：22 + 1 − 3 = <b>20 元</b><br>配送：22 + 2 + 4 − 2 = <b>26 元</b></p><strong class="priceOutcome">自取省 6 元</strong></article>
+        <article class="card"><span class="tag neutralTag">场景二 · 两种方式同价</span><h3>肥牛饭</h3><p>自取：26 + 1 − 2 = <b>25 元</b><br>配送：26 + 2 + 3 − 6 = <b>25 元</b></p><strong class="priceOutcome">如实显示同价</strong></article>
+        <article class="card"><span class="tag neutralTag">场景三 · 自取更贵</span><h3>辣子鸡丁饭</h3><p>自取：24 + 1 − 1 = <b>24 元</b><br>配送：24 + 1 + 2 − 5 = <b>22 元</b></p><strong class="priceOutcome">自取多付 2 元</strong></article>
+      </div><p class="muted">以上是原型固定算例，用于验证比较规则与展示，不代表当前商家的真实报价。</p>
+      <div class="grid two coreBlocks"><article class="card"><span class="label">路线判断</span><h3>离得近，不等于不绕路</h3><p>额外绕行按同一出行方式下“经门店到家 − 直接回家”计算。默认案例步行直回 22 分钟、经店 25 分钟，额外多 3 分钟；当前位置距店 600 米、约 8 分钟，门店距家 1.3 公里、约 17 分钟。</p><p>地图采用三点路线示意，真正导航交给“在百度地图打开”。距离与时长是示例，不通过分钟数反推真实地理信息。</p></article><article class="card"><span class="label">履约预期</span><h3>时间未知，就明确说未知</h3><p>已知备餐用区间展示；未知时标注“备餐时间待确认”，用户主动确认可能等待后才允许继续。全程时间不含等餐，不能把取餐链路顺畅写成“到店零等待”。</p><p>无供给、预算不足或全部候选被排除时，不塞入不符合条件的餐品。原型提供改条件与退出；独立包的跨页出口仅提示范围，未接真实配送页。</p></article></div>
+      <h3 class="subheading">AI 做什么，规则与数据做什么</h3>
+      <div class="tableWrap"><table><thead><tr><th>层次</th><th>应承担的任务</th><th>当前实际状态</th></tr></thead><tbody>
+        <tr><td>产品内 AI</td><td>把“预算 30、想吃米饭、别绕太远”整理为可编辑条件，并基于已知事实解释候选。</td><td><span class="tag neutralTag">待接入</span> 当前用关键词规则识别预算、口味、方式与绕行，不是大模型推理。</td></tr>
+        <tr><td>确定性规则</td><td>资格、预算过滤、实付与绕行计算、未知备餐限制。</td><td><span class="tag">已实现</span> 原型已有结构化模型与 5 项规则测试。</td></tr>
+        <tr><td>可信数据与系统</td><td>实时可售、用户适用优惠、地图路径、备餐、支付及门店订单。</td><td><span class="tag neutralTag">待接入</span> 目前使用固定示例，订单只保存在页面状态。</td></tr>
+        <tr><td>AI 辅助制作</td><td>资料归纳、前端编写、交互迭代、测试与裁剪交付。</td><td><span class="tag">已参与</span> 支持本轮人机协作交付；不等同于用户侧 AI 价值已验证。</td></tr>
+      </tbody></table></div>
+      <div class="callout"><strong>不为 AI 增加一道必经步骤</strong><p>结构化表单本身就能完成任务。只有在同样信息与供给下，自然语言交互能进一步降低描述成本、减少误解或支持复用，才值得增加模型。AI 的增量必须与整条产品流程的增量分开验证。</p></div>
+    </section>
+
+    <section id="growth" class="anchor section">
+      <h2><span>05</span>运营推广计划</h2>
+      <p class="lead">先验证一条有供给、有取餐机会的路线，再决定要不要扩大曝光。<mark>不把点击变多，直接解释为新增订单或自取心智建立。</mark></p>
+      <div class="grid three phases"><article class="card"><span class="label">阶段一 · 原型验证</span><h3>先看用户会不会想到、能否判断</h3><p>拟招募低频自取、使用后停止、高频顺路自取三组，首轮各 3 人，共 9 人。先还原最近一次真实晚餐，不提前提示“自取”；再观察原型任务与拒绝原因。</p><p class="muted">探索性样本，未开展，不能推算总体比例。</p></article><article class="card"><span class="label">阶段二 · 小范围试点</span><h3>先把供给与到店体验做稳</h3><p>选择写字楼—通勤末端—社区的可执行路线，核对门店自取资格、晚餐库存、取餐入口与高峰备餐。争取晚餐决策触点，控制频次，保留关闭和配送选择。</p><p class="muted">上线依赖与未来计划，非本轮已实现能力。</p></article><article class="card"><span class="label">阶段三 · 对照评估</span><h3>把场景价值和 AI 价值分开</h3><p>同区域、同等供给与价格，按用户稳定随机分组。A 为现有体验；B 为场景入口与结构化筛选；C 在 B 的相同信息基础上增加自然语言交互与可编辑记忆。</p><p class="muted">B 对 A 看流程整体价值；C 对 B 看 AI 增量。</p></article></div>
+      <h3 class="subheading">假设、动作与验证一一对应</h3>
+      <div class="tableWrap"><table><thead><tr><th>待验证假设</th><th>验证方式</th><th>什么情况不能算成功</th></tr></thead><tbody>
+        <tr><td>H1 · 回家前的建议能让自取进入晚餐选择。</td><td>无提示还原晚餐任务，观察自发想起时机；具备条件后看 B 对 A。</td><td>仅在自取首页上看到卡片；不能说明已经触达默认外送用户。</td></tr>
+        <tr><td>H2 · 集中展示实付、绕行、备餐能帮助正确判断与行动。</td><td>记录独立判断、任务完成、耗时和误解；区分没看见与看见但不值得。</td><td>用户点了按钮，却误以为更省、不会绕路或不用等餐。</td></tr>
+        <tr><td>H3 · 顺利体验与偏好复用能支持下一次同场景使用；AI 有额外价值。</td><td>下一工作周无提示回访；灰度中观察次周再用，并用 C 对 B 单独验证 AI。</td><td>只证明保存按钮能用，或把高频用户本来就会复购归因给方案。</td></tr>
+      </tbody></table></div>
+      <div class="metricCard"><span class="label">建议观察 14 天 · 具备灰度条件后</span><h3>主指标：完成至少 1 次工作日晚餐自取的用户数 ÷ 全部入组用户数</h3><p>次周再用也以全部完整随访入组用户为分母，不只看点击者。曝光与点击用于诊断；用无提示任务补充“是否想起”的判断。</p><div class="grid two"><div><strong>必须一起看</strong><p>平台总完成订单 / 入组用户、外送订单变化，区分方式迁移与平台净增。没有商家全渠道数据，就不宣称商家净增。</p></div><div><strong>护栏</strong><p>取消退款、到店等待、错店、关闭反馈与门店高峰负担。发生严重价格误导、错店或履约异常，应暂停。</p></div></div></div>
+      <p class="muted">目前没有行为基线，不承诺提升幅度、线上样本量或流量规模。实验前根据基线与最小可检测效应确定样本、比较方法、护栏阈值和最长周期；样本不足就记录为未能判断，不因中途点击好看提前宣布成功。</p>
+    </section>
+
+    <section id="keys" class="anchor section">
+      <h2><span>06</span>成功的关键要素</h2>
+      <p class="lead">这一版已经把交互串起来。真正决定能不能成立的，是<mark>触达位置、真实价值、供给履约和一次真实验证</mark>。</p>
+      <div class="grid three keyCards">
+        <article class="card"><span class="tag">产品 / 流量</span><h3>在晚餐决定前被看见</h3><p>需要平台主首页或其他晚餐决策触点的入口机会与频控。现有自取页入口不是全域唤起的证据。</p></article>
+        <article class="card"><span class="tag">交易 / 价格</span><h3>总支付能核对、能兑现</h3><p>同餐、同适用条件、同一报价时点地比较，区分优惠资格与到手总价。不为展示“更省”隐藏配送优惠。</p></article>
+        <article class="card"><span class="tag">商家 / 履约</span><h3>取餐真的顺手</h3><p>资格、库存、入口、备餐与高峰负担要可靠。一次晚点或错店，可能抵消前面的提醒与价差。</p></article>
+        <article class="card"><span class="tag neutralTag">地图 / 隐私</span><h3>用户知道依据来自哪里</h3><p>先由用户确认方向，不默认读取后台轨迹。正式接入时需处理真实路线、授权与坐标准确性。</p></article>
+        <article class="card"><span class="tag neutralTag">AI / 工程</span><h3>解释不能越过事实</h3><p>模型负责理解与解释，结构化数据提供事实，规则计算价格和资格。未识别的信息允许直接修改，不编造推荐理由。</p></article>
+        <article class="card"><span class="tag neutralTag">用户研究 / 数据</span><h3>把不愿意用的原因留下来</h3><p>收集拒绝、误解与失败，先完成真实任务测试；再用对照评估区分唤起、方式迁移与净增。</p></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
